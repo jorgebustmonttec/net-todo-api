@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using TodoApi.Data;
+using TodoApi.Endpoints;
 
 var builder = WebApplication.CreateBuilder(args);
 
