@@ -51,6 +51,8 @@ app.MapGet("/weatherforecast", () =>
 .WithOpenApi();
 // ===================== TEMPLATE STUFF =====================
 
+app.MapTodoEndpoints();
+
 app.Run();
 
 // ===================== TEMPLATE STUFF =====================
