@@ -18,6 +18,11 @@ public class TodoRepository : ITodoRepository
         return await _context.Todos.ToListAsync();
     }
 
+    public async Task<Todo?> GetByIdAsync(int id)
+    {
+        return await _context.Todos.FindAsync(id);
+    }
+
     public async Task<Todo> CreateAsync(Todo todo)
     {
         throw new NotImplementedException();
@@ -33,13 +38,5 @@ public class TodoRepository : ITodoRepository
         throw new NotImplementedException();
     }
 
-    public Task<IEnumerable<Todo>> GetAllSync()
-    {
-        throw new NotImplementedException();
-    }
 
-    public Task<Todo?> GetByIdAsync(int id)
-    {
-        throw new NotImplementedException();
-    }
 }

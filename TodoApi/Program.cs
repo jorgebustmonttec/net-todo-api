@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using TodoApi.Data;
-using TodoApi.Endpoints;
+using TodoApi.Repositories;
+using TodoApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +11,11 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 //db context injection stuff
 builder.Services.AddDbContext<TodoDbContext>(opt => opt.UseSqlServer(connectionString));
 
+//new
+builder.Services.AddScoped<ITodoRepository, TodoRepository>();
+builder.Services.AddScoped<ITodoService, TodoService>();
+
+builder.Services.AddControllers();
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -51,7 +57,7 @@ app.MapGet("/weatherforecast", () =>
 .WithOpenApi();
 // ===================== TEMPLATE STUFF =====================
 
-app.MapTodoEndpoints();
+app.MapControllers();
 
 app.Run();
 

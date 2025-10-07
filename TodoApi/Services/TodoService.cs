@@ -12,7 +12,12 @@ public class TodoService : ITodoService
         _todoRepository = todoRepository;
     }
 
-        public async Task<Todo?> GetByIdAsync(int id)
+    public async Task<IEnumerable<Todo>> GetAllAsync()
+    {
+        return await _todoRepository.GetAllAsync();
+    }
+
+    public async Task<Todo?> GetByIdAsync(int id)
     {
         return await _todoRepository.GetByIdAsync(id);
     }
@@ -21,17 +26,12 @@ public class TodoService : ITodoService
         throw new NotImplementedException();
     }
 
-    public Task<bool> DeleteAsync(int id)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<IEnumerable<Todo>> GetAllAsync()
-    {
-        throw new NotImplementedException();
-    }
-
     public Task<bool> UpdateAsync(int id, Todo todo)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<bool> DeleteAsync(int id)
     {
         throw new NotImplementedException();
     }
