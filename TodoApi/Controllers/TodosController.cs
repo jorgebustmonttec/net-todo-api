@@ -22,7 +22,11 @@ public class TodosController : ControllerBase
         return Ok(todos);
     }
 
-
+    /// <summary>
+    ///  Retrieves a specific todo item by its ID.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [HttpGet("{id}")]
     public async Task<ActionResult<Todo>> GetTodoById(int id)
     {
