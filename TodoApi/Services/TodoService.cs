@@ -1,3 +1,4 @@
+using AutoMapper;
 using TodoApi.Models;
 using TodoApi.Repositories;
 
@@ -6,10 +7,12 @@ namespace TodoApi.Services;
 public class TodoService : ITodoService
 {
     private readonly ITodoRepository _todoRepository;
+    private readonly IMapper _mapper;
 
-    public TodoService(ITodoRepository todoRepository)
+    public TodoService(ITodoRepository todoRepository, IMapper mapper)
     {
         _todoRepository = todoRepository;
+        _mapper = mapper;
     }
 
     public async Task<IEnumerable<Todo>> GetAllAsync()
@@ -21,28 +24,26 @@ public class TodoService : ITodoService
     {
         return await _todoRepository.GetByIdAsync(id);
     }
+
     public Task<Todo> CreateAsync(CreateTodoDto createDto)
     {
-        var newTodo = new Todo
-        {
-            Title = createDto.Title,
-            Description = createDto.Description,
-            IsComplete = false,
-            user = 1
-        };
+        var newTodo = _mapper.Map<Todo>(createDto);
+
+        newTodo.IsComplete = false;
+        newTodo.user = 1;
+
         return _todoRepository.CreateAsync(newTodo);
     }
 
-    public async Task<bool> UpdateAsync(int id, Todo todo)
+    public async Task<bool> UpdateAsync(int id, updateTodoDto updateDto)
     {
         var existingTodo = await _todoRepository.GetByIdAsync(id);
         if (existingTodo == null)
         {
             return false;
         }
-        existingTodo.Title = todo.Title;
-        existingTodo.IsComplete = todo.IsComplete;
-        existingTodo.Description = todo.Description;
+
+        _mapper.Map(updateDto, existingTodo);
 
         await _todoRepository.UpdateAsync(existingTodo);
 

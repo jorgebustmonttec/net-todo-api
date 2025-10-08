@@ -18,6 +18,9 @@ builder.Services.AddScoped<ITodoService, TodoService>();
 
 builder.Services.AddControllers();
 
+//AutoMapper
+builder.Services.AddAutoMapper(typeof(Program));
+
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore swashbuckle
 builder.Services.AddEndpointsApiExplorer();

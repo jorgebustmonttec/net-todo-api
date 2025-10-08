@@ -93,13 +93,13 @@ public class TodosController : ControllerBase
     /// <param name="todo"></param>
     /// <returns></returns>
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateTodo(int id, Todo todo)
+    public async Task<IActionResult> UpdateTodo(int id, updateTodoDto updateDto)
     {
-        var todoUpdated = await _todoService.UpdateAsync(id, todo);
-        if (todoUpdated == false)
+        var wasUpdated = await _todoService.UpdateAsync(id, updateDto);
+        if (wasUpdated == false)
         {
             return NotFound();
         }
-        return Ok(todo);
+        return NoContent();
     }
 }
