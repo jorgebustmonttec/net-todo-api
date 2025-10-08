@@ -9,6 +9,6 @@ public class TodosProfile : Profile
     {
         // Source - > Target
         CreateMap<CreateTodoDto, Todo>();
-        CreateMap<updateTodoDto, Todo>();
+        CreateMap<UpdateTodoDto, Todo>();
     }
 }

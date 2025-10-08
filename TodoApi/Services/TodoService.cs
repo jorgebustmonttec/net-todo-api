@@ -35,7 +35,7 @@ public class TodoService : ITodoService
         return _todoRepository.CreateAsync(newTodo);
     }
 
-    public async Task<bool> UpdateAsync(int id, updateTodoDto updateDto)
+    public async Task<bool> UpdateAsync(int id, UpdateTodoDto updateDto)
     {
         var existingTodo = await _todoRepository.GetByIdAsync(id);
         if (existingTodo == null)
