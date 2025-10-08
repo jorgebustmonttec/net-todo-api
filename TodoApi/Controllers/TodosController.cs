@@ -15,6 +15,11 @@ public class TodosController : ControllerBase
         _todoService = todoService;
     }
 
+
+    /// <summary>
+    /// Returns a list of all todo items.
+    /// </summary>
+    /// <returns></returns>
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Todo>>> GetAllTodos()
     {
@@ -39,15 +44,62 @@ public class TodosController : ControllerBase
     }
 
 
+    /// <summary>
+    /// Post endpoint to create a todo item with a provided todo in JSON with title and description only.
+    /// </summary>
+    /// <param name="createDto"></param>
+    /// <returns></returns>
     [HttpPost]
     public async Task<ActionResult<Todo>> CreateTodo(CreateTodoDto createDto)
     {
-        throw new NotImplementedException();
+        var createdTodo = await _todoService.CreateAsync(createDto);
+
+        return CreatedAtAction(
+            nameof(GetTodoById),
+            new { id = createdTodo.Id },
+            createdTodo);
     }
 
+    /// <summary>
+    /// Deletes a todo item with the provided id
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteTodo(int id)
     {
-        throw new NotImplementedException();
+        // HINT: The controller's job is just to call the service.
+        // Call the _todoService.DeleteAsync(id) method. It returns a boolean.
+        var wasDeleted = await _todoService.DeleteAsync(id);
+
+        // HINT: Now, check the result.
+        // If 'wasDeleted' is false, it means the service couldn't find the item.
+        // What should you return? (Look at the GetTodoById method for a clue).
+        if (wasDeleted == false)
+        {
+            return NotFound();
+        }
+        return NoContent();
+
+        // HINT: If 'wasDeleted' is true, the delete was successful.
+        // The standard HTTP response for a successful DELETE is "204 No Content".
+        // The helper method for this is `return NoContent();`
+    }
+
+    /// <summary>
+    /// Update a todo item.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="todo"></param>
+    /// <returns></returns>
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateTodo(int id, Todo todo)
+    {
+        var todoUpdated = await _todoService.UpdateAsync(id, todo);
+        if (todoUpdated == false)
+        {
+            return NotFound();
+        }
+        return Ok(todo);
     }
 }
