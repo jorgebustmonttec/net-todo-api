@@ -90,7 +90,7 @@ public class TodosController : ControllerBase
     /// Update a todo item.
     /// </summary>
     /// <param name="id"></param>
-    /// <param name="todo"></param>
+    /// <param name="updateDto"></param>
     /// <returns></returns>
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateTodo(int id, updateTodoDto updateDto)
