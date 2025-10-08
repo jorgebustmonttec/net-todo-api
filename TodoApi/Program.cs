@@ -6,36 +6,42 @@ using TodoApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-//connection string
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+//CORS
+const string DEV_CORS_POLICY = "AllowDevOrigin";
 
-//db context injection stuff
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: DEV_CORS_POLICY,
+      policy =>
+      {
+          // This allows your React app's origin
+          policy.WithOrigins("http://localhost:5173")
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+      });
+});
+
+
+// --- Register Services for Dependency Injection ---
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<TodoDbContext>(opt => opt.UseSqlServer(connectionString));
 
-//new
 builder.Services.AddScoped<ITodoRepository, TodoRepository>();
 builder.Services.AddScoped<ITodoService, TodoService>();
 
 builder.Services.AddControllers();
-
-//AutoMapper
 builder.Services.AddAutoMapper(typeof(Program));
-
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 
-//Swagger stuff
-builder.Services.AddSwaggerGen( options =>
+builder.Services.AddSwaggerGen(options =>
 {
-    //reading xml from here(?
     var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
 });
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// --- Configure the HTTP request pipeline ---
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -43,6 +49,12 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// --- Apply the CORS policy ---
+// This MUST go before UseAuthorization and MapControllers
+app.UseCors(DEV_CORS_POLICY);
+
+// app.UseAuthorization(); // We will add this later
 
 app.MapControllers();
 
