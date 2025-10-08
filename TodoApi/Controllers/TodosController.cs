@@ -40,7 +40,7 @@ public class TodosController : ControllerBase
 
 
     [HttpPost]
-    public async Task<ActionResult<Todo>> CreateTodo(Todo newTodo)
+    public async Task<ActionResult<Todo>> CreateTodo(CreateTodoDto createDto)
     {
         throw new NotImplementedException();
     }
