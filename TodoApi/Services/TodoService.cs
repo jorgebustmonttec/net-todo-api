@@ -21,18 +21,35 @@ public class TodoService : ITodoService
     {
         return await _todoRepository.GetByIdAsync(id);
     }
-    public Task<Todo> CreateAsync(Todo newTodo)
+    public Task<Todo> CreateAsync(CreateTodoDto createDto)
     {
-        throw new NotImplementedException();
+        var newTodo = new Todo
+        {
+            Title = createDto.Title,
+            Description = createDto.Description,
+            IsComplete = false
+        };
+        return _todoRepository.CreateAsync(newTodo);
     }
 
-    public Task<bool> UpdateAsync(int id, Todo todo)
+    public async Task<bool> UpdateAsync(int id, Todo todo)
     {
-        throw new NotImplementedException();
+        var existingTodo = await _todoRepository.GetByIdAsync(id);
+        if (existingTodo != null)
+        {
+            await _todoRepository.UpdateAsync(todo);
+            return true;
+        } return false;
+
     }
 
-    public Task<bool> DeleteAsync(int id)
+    public async Task<bool> DeleteAsync(int id)
     {
-        throw new NotImplementedException();
+        var existingTodo = await _todoRepository.GetByIdAsync(id);
+        if (existingTodo != null)
+        {
+            await _todoRepository.DeleteAsync(id);
+            return true;
+        } return false;
     }
 }
