@@ -9,4 +9,5 @@ public interface ITodoService
     Task<Todo> CreateAsync(CreateTodoDto CreateDto);
     Task<bool> UpdateAsync(int id, UpdateTodoDto updateDto);
     Task<bool> DeleteAsync(int id);
+    Task<bool> ToggleAsync(int id);
 }

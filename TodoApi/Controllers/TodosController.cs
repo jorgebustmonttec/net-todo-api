@@ -73,7 +73,7 @@ public class TodosController : ControllerBase
     /// <summary>
     /// Updates an existing Todo item.
     /// </summary>
-    /// <param name="id" example="1">The ID of the Todo item to update.</param>
+    /// <param name="id" example="2001">The ID of the Todo item to update.</param>
     /// <param name="updateDto">The updated data for the Todo item.</param>
     /// <returns></returns>
     /// <response code="204">If the update was successful.</response>
@@ -94,7 +94,7 @@ public class TodosController : ControllerBase
     /// <summary>
     /// Deletes a specific Todo item.
     /// </summary>
-    /// <param name="id" example="1">The ID of the Todo item to delete.</param>
+    /// <param name="id" example="2001">The ID of the Todo item to delete.</param>
     /// <returns></returns>
     /// <response code="204">If the deletion was successful.</response>
     /// <response code="404">If the item with the specified ID is not found.</response>
@@ -110,4 +110,26 @@ public class TodosController : ControllerBase
         }
         return NoContent();
     }
+
+
+    /// <summary>
+    /// Toggles the complation status of a todo item
+    /// </summary>
+    /// <param name="id" example="2001">The ID of the todo item to toggle</param>
+    /// <returns></returns>
+    /// <response code="204">If the toggle was successful.</response>
+    /// <response code="404">If the item with the specified ID is not found.</response>
+    [HttpPatch("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> ToggleTodo(int id)
+    {
+        var wasToggled = await _todoService.ToggleAsync(id);
+        if (wasToggled == false)
+        {
+            return NotFound();
+        }
+        return NoContent();
+    }
+    
 }

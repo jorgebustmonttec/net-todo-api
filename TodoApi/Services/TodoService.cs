@@ -58,6 +58,21 @@ public class TodoService : ITodoService
         {
             await _todoRepository.DeleteAsync(id);
             return true;
-        } return false;
+        }
+        return false;
     }
+
+    public async Task<bool> ToggleAsync(int id)
+    {
+        var existingTodo = await _todoRepository.GetByIdAsync(id);
+        if (existingTodo == null)
+        {
+            return false;
+        }
+
+        existingTodo.IsComplete = !existingTodo.IsComplete;
+        await _todoRepository.UpdateAsync(existingTodo);
+        return true;
+    }
+
 }
