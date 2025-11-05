@@ -1,0 +1,92 @@
+import { useState } from "react";
+import type { Todo, UpdateTodoDto } from "@/types/todo";
+
+interface TodoItemProps {
+    todo: Todo;
+    onDelete: (id: number) => void;
+    onToggle: (id: number) => void;
+    onUpdate: (id: number, data: UpdateTodoDto) => void;
+}
+
+export function TodoItem ({todo, onDelete, onToggle, onUpdate}: TodoItemProps){
+    const [isEditing, setIsEditing] = useState(false);
+
+    const [editData, setEditData] = useState<UpdateTodoDto>({
+        title: todo.title,
+        description: todo.description || '',
+        isComplete: todo.isComplete,
+    });
+
+    const handleEdit = () => {
+        setEditData({
+            title: todo.title,
+            description: todo.description || '',
+            isComplete: todo.isComplete,
+        });
+        setIsEditing(true);
+    };
+
+    const handleSave = () => {
+        onUpdate(todo.id, editData);
+        setIsEditing(false);
+    };
+
+    const handleCancel = () =>{
+        setEditData({
+            title: todo.title,
+            description: todo.description || '',
+            isComplete: todo.isComplete,
+        });
+        setIsEditing(false);
+    };
+
+    if (isEditing){
+        return(
+            <tr>
+                <td>{todo.id}</td>
+                <td>
+                    <input 
+                    type="text" 
+                    value={editData.title}
+                    onChange={(e) => setEditData({ ...editData, title: e.target.value })}
+                    />
+                </td>
+                <td>
+                    <input 
+                    type="text" 
+                    value={editData.description}
+                    onChange={(e) => setEditData({ ...editData, description: e.target.value })}
+                    />
+                </td>
+                <td>{todo.user}</td>
+                <td>
+                    <input 
+                    type="checkbox"
+                    checked={editData.isComplete}
+                    onChange={(e) => setEditData({ ...editData, isComplete: e.target.checked })}
+                    />
+                </td>
+                <td>
+                    <button onClick={handleSave}>Save</button>
+                    <button onClick={handleCancel}>Cancel</button>
+                </td>
+            </tr>
+        );
+    }
+    return (
+        <tr>
+            <td>{todo.id}</td>
+            <td>{todo.title}</td>
+            <td>{todo.description}</td>
+            <td>{todo.user}</td>
+            <td>{todo.isComplete ? 'Done' : 'Pending'}</td>
+            <td>
+                <button onClick={() => onToggle(todo.id)}>
+                {todo.isComplete ? 'Mark as Undone' : 'Mark as Done'}
+                </button>
+                <button onClick={handleEdit}>Edit</button>
+                <button onClick={() => onDelete(todo.id)}>Delete</button>
+            </td>
+        </tr>
+    );
+}
