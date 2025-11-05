@@ -47,8 +47,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
-app.UseHttpsRedirection();
+// Only enforce HTTPS redirection outside dev
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
 
 // --- Apply the CORS policy ---
 // This MUST go before UseAuthorization and MapControllers
