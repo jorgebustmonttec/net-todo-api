@@ -23,6 +23,13 @@ public class TodoRepository : ITodoRepository
         return await _context.Todos.FindAsync(id);
     }
 
+    public async Task<IEnumerable<Todo>> GetByUserIdAsync(int userId)
+    {
+        return await _context.Todos
+            .Where(t => t.UserId == userId)
+            .ToListAsync();
+    }
+
     public async Task<Todo> CreateAsync(Todo todo)
     {
         await _context.AddAsync(todo);
@@ -44,8 +51,5 @@ public class TodoRepository : ITodoRepository
             _context.Remove(todoDel);
             await _context.SaveChangesAsync();
         }
-
     }
-
-
 }

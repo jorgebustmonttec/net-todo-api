@@ -133,5 +133,11 @@ public class TodosController : ControllerBase
         }
         return NoContent();
     }
-    
+
+    [HttpGet("user/{userId:int}")]
+    public async Task<IActionResult> GetByUserId(int userId)
+    {
+        var todos = await _todoService.GetByUserIdAsync(userId);
+        return Ok(todos);
+    }
 }

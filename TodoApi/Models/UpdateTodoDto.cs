@@ -22,4 +22,10 @@ public class UpdateTodoDto
     /// </summary>
     /// <example>true</example>
     public bool IsComplete { get; set; }
+
+    /// <summary>
+    /// The ID of the user this task is assigned to.
+    /// </summary>
+    /// <example>1</example>
+    public int UserId { get; set; }
 }

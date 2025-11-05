@@ -16,4 +16,10 @@ public class CreateTodoDto
     /// </summary>
     /// <example>Follow the official Microsoft documentation and build a sample project.</example>
     public string? Description { get; set; }
+
+    /// <summary>
+    /// The ID of the user this task is assigned to.
+    /// </summary>
+    /// <example>1</example>
+    public int UserId { get; set; }
 }

@@ -7,11 +7,13 @@ namespace TodoApi.Services;
 public class TodoService : ITodoService
 {
     private readonly ITodoRepository _todoRepository;
+    private readonly IUserRepository _userRepository;
     private readonly IMapper _mapper;
 
-    public TodoService(ITodoRepository todoRepository, IMapper mapper)
+    public TodoService(ITodoRepository todoRepository, IUserRepository userRepository, IMapper mapper)
     {
         _todoRepository = todoRepository;
+        _userRepository = userRepository;
         _mapper = mapper;
     }
 
@@ -25,14 +27,23 @@ public class TodoService : ITodoService
         return await _todoRepository.GetByIdAsync(id);
     }
 
-    public Task<Todo> CreateAsync(CreateTodoDto createDto)
+    public async Task<IEnumerable<Todo>> GetByUserIdAsync(int userId)
     {
+        return await _todoRepository.GetByUserIdAsync(userId);
+    }
+
+    public async Task<Todo> CreateAsync(CreateTodoDto createDto)
+    {
+        // Validate userId exists
+        var user = await _userRepository.GetByIdAsync(createDto.UserId);
+        if (user == null)
+        {
+            throw new ArgumentException($"User with ID {createDto.UserId} does not exist.");
+        }
+
         var newTodo = _mapper.Map<Todo>(createDto);
-
         newTodo.IsComplete = false;
-        newTodo.UserId = 1; // default to seeded user #1
-
-        return _todoRepository.CreateAsync(newTodo);
+        return await _todoRepository.CreateAsync(newTodo);
     }
 
     public async Task<bool> UpdateAsync(int id, UpdateTodoDto updateDto)

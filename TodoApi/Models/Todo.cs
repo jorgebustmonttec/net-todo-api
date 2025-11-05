@@ -1,4 +1,4 @@
-
+using System.Text.Json.Serialization;
 
 namespace TodoApi.Models;
 /// <summary>
@@ -34,8 +34,9 @@ public class Todo
     /// ID of the user this task is assigned to
     /// </summary>
     /// <example>1</example>
-    public int UserId { get; set; } = 1;
+    public int UserId { get; set; }
 
-    // Navigation
+    // Navigation property - excluded from JSON serialization
+    [JsonIgnore]
     public User? User { get; set; }
 }
