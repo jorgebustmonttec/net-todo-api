@@ -30,7 +30,7 @@ public class TodoService : ITodoService
         var newTodo = _mapper.Map<Todo>(createDto);
 
         newTodo.IsComplete = false;
-        newTodo.user = 1;
+        newTodo.UserId = 1; // default to seeded user #1
 
         return _todoRepository.CreateAsync(newTodo);
     }

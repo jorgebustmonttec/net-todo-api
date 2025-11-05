@@ -1,3 +1,5 @@
+
+
 namespace TodoApi.Models;
 /// <summary>
 /// Represents a single task or todo item in the system
@@ -32,5 +34,8 @@ public class Todo
     /// ID of the user this task is assigned to
     /// </summary>
     /// <example>1</example>
-    public int user { get; set; } = 1;
+    public int UserId { get; set; } = 1;
+
+    // Navigation
+    public User? User { get; set; }
 }
