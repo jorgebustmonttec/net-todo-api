@@ -5,7 +5,7 @@ interface TodoItemProps {
     todo: Todo;
     onDelete: (id: number) => void;
     onToggle: (id: number) => void;
-    onUpdate: (id: number, data: UpdateTodoDto) => void;
+    onUpdate: (id: number, updateDto: UpdateTodoDto) => void;
 }
 
 export function TodoItem ({todo, onDelete, onToggle, onUpdate}: TodoItemProps){
@@ -15,6 +15,7 @@ export function TodoItem ({todo, onDelete, onToggle, onUpdate}: TodoItemProps){
         title: todo.title,
         description: todo.description || '',
         isComplete: todo.isComplete,
+        userId: todo.userId,
     });
 
     const handleEdit = () => {
@@ -22,6 +23,7 @@ export function TodoItem ({todo, onDelete, onToggle, onUpdate}: TodoItemProps){
             title: todo.title,
             description: todo.description || '',
             isComplete: todo.isComplete,
+            userId: todo.userId,
         });
         setIsEditing(true);
     };
@@ -36,6 +38,7 @@ export function TodoItem ({todo, onDelete, onToggle, onUpdate}: TodoItemProps){
             title: todo.title,
             description: todo.description || '',
             isComplete: todo.isComplete,
+            userId: todo.userId,
         });
         setIsEditing(false);
     };
@@ -58,7 +61,7 @@ export function TodoItem ({todo, onDelete, onToggle, onUpdate}: TodoItemProps){
                     onChange={(e) => setEditData({ ...editData, description: e.target.value })}
                     />
                 </td>
-                <td>{todo.user}</td>
+                <td>{todo.userId}</td>
                 <td>
                     <input 
                     type="checkbox"
@@ -78,12 +81,15 @@ export function TodoItem ({todo, onDelete, onToggle, onUpdate}: TodoItemProps){
             <td>{todo.id}</td>
             <td>{todo.title}</td>
             <td>{todo.description}</td>
-            <td>{todo.user}</td>
-            <td>{todo.isComplete ? 'Done' : 'Pending'}</td>
+            <td>{todo.userId}</td>
             <td>
-                <button onClick={() => onToggle(todo.id)}>
-                {todo.isComplete ? 'Mark as Undone' : 'Mark as Done'}
-                </button>
+                <input 
+                type="checkbox" 
+                checked={todo.isComplete} 
+                onChange={() => onToggle(todo.id)}
+                />
+            </td>
+            <td>
                 <button onClick={handleEdit}>Edit</button>
                 <button onClick={() => onDelete(todo.id)}>Delete</button>
             </td>

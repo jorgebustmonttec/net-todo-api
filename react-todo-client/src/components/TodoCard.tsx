@@ -1,12 +1,9 @@
-import { useState } from "react";
-import type { Todo } from "@/types/todo";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./ui/card";
+import { Button } from "./ui/button";
+import type { Todo, User } from "@/types/todo";
 
-//import shadcn stuff
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-
-//define props, needs todo and functions for buttons
 interface TodoCardProps {
     todo: Todo;
     onDelete: (id: number) => void;
@@ -15,8 +12,20 @@ interface TodoCardProps {
 
 export function TodoCard({ todo, onDelete, onToggle}: TodoCardProps) {
     const [isExpanded, setIsExpanded] = useState(false);
+    const [user, setUser] = useState<User | null>(null);
+    const [loadingUser, setLoadingUser] = useState(false);
 
-    //card color based on wether its complete or not
+    useEffect(() => {
+        if (isExpanded && !user) {
+            setLoadingUser(true);
+            fetch(`http://localhost:5131/api/users/${todo.userId}`)
+                .then(res => res.json())
+                .then(data => setUser(data))
+                .catch(err => console.error('Failed to fetch user:', err))
+                .finally(() => setLoadingUser(false));
+        }
+    }, [isExpanded, todo.userId, user]);
+
     const cardBgColor = todo.isComplete ? 'bg-green-100 dark:bg-green-900' : 'bg-red-100 dark:border-red-900';
     const cardBorderColor = todo.isComplete ? 'bg-green-300 dark:bg-green-700' : 'bg-red-300 dark:border-red-700';
     
@@ -26,7 +35,7 @@ export function TodoCard({ todo, onDelete, onToggle}: TodoCardProps) {
                 <div className="flex justify-between items-start">
                     <div>
                         <CardTitle>{todo.title}</CardTitle>
-                        <CardDescription>User ID: {todo.user}</CardDescription>
+                        <CardDescription>User ID: {todo.userId}</CardDescription>
                     </div>
                     <Button
                     variant="ghost"
@@ -40,7 +49,15 @@ export function TodoCard({ todo, onDelete, onToggle}: TodoCardProps) {
             {isExpanded && (
                 <>
                     <CardContent>
-                        <p>{todo.description || 'No description provided.'}</p>
+                        {loadingUser && <p>Loading user...</p>}
+                        {user && (
+                            <div className="mb-4 space-y-1">
+                                <p><strong>Name:</strong> {user.name}</p>
+                                <p><strong>Age:</strong> {user.age}</p>
+                                <p><strong>Email:</strong> {user.email}</p>
+                            </div>
+                        )}
+                        <p><strong>Description:</strong> {todo.description || 'No description provided.'}</p>
                     </CardContent>
                     <CardFooter className="flex justify-between">
                         <Button

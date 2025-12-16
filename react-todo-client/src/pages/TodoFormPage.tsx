@@ -22,6 +22,7 @@ export function TodoFormPage({ mode}: TodoFormProps) {
         title: '',
         description: '',
         isComplete: false,
+        userId: 1, // default user
     });
 
     useEffect(() => {
@@ -32,6 +33,7 @@ export function TodoFormPage({ mode}: TodoFormProps) {
                     title: todoToEdit.title,
                     description: todoToEdit.description || '',
                     isComplete: todoToEdit.isComplete,
+                    userId: todoToEdit.userId,
                 });
             }
         }
@@ -39,7 +41,7 @@ export function TodoFormPage({ mode}: TodoFormProps) {
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value} = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
+        setFormData(prev => ({ ...prev, [name]: name === 'userId' ? parseInt(value, 10) : value }));
     };
 
     const handleCheckboxChange = (checked: boolean) => {
@@ -51,7 +53,7 @@ export function TodoFormPage({ mode}: TodoFormProps) {
         if (!formData.title.trim()) return;
 
         if (mode==='create') {
-            await addTodo({title: formData.title, description:formData.description});
+            await addTodo({title: formData.title, description:formData.description, userId: formData.userId});
         } else if (mode ==='edit' && id) {
             await editTodo(parseInt(id), formData);
         }
@@ -88,6 +90,17 @@ export function TodoFormPage({ mode}: TodoFormProps) {
                                 onChange={handleInputChange}
                             />
                         </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="userId">User ID</Label>
+                            <Input
+                                id="userId"
+                                name="userId"
+                                type="number"
+                                value={formData.userId}
+                                onChange={handleInputChange}
+                                required
+                            />
+                        </div>
                         {mode === 'edit' && (
                         <div className="flex items-center space-x-2">
                             <Checkbox
@@ -104,11 +117,11 @@ export function TodoFormPage({ mode}: TodoFormProps) {
                         Cancel
                         </Button>
                         <Button type="submit">
-                        {mode === 'edit' ? 'Save Changes' : 'Create Todo'}
+                            {mode === 'edit' ? 'Update Todo' : 'Create Todo'}
                         </Button>
-                    </CardFooter>
+                     </CardFooter>
                 </form>
             </Card>
         </Layout>
-    );   
+    );
 }
